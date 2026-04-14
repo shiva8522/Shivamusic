@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Add Song (AJAX)</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+    <h2>Add New Song</h2>
+    <form id="addSongForm">
+        <input type="text" id="title" placeholder="Song Title" required>
+        <select id="album">
+            <option value="">-- Select Album --</option>
+            {% for album in albums %}
+            <option value="{{ album.id }}">{{ album.title }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Add Song</button>
+    </form>
+
+    <p id="message"></p>
+
+    <script>
+        $(document).ready(function () {
+            $("#addSongForm").submit(function (event) {
+                event.preventDefault();
+
+                let title = $("#title").val();
+                let album_id = $("#album").val();
+
+                $.ajax({
+                    url: "{% url 'add_song_ajax' %}",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({ title: title, album_id: album_id }),
+                    success: function (response) {
+                        $("#message").text(response.message).css("color", "green");
+                        $("#title").val("");  // Clear input field
+                    },
+                    error: function (xhr) {
+                        let errorMsg = xhr.responseJSON ? xhr.responseJSON.error : "Something went wrong!";
+                        $("#message").text(errorMsg).css("color", "red");
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

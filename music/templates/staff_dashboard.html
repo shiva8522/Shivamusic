@@ -1,0 +1,4 @@
+{% if request.user.is_staff %}
+    <a href="{% url 'admin:index' %}">Admin Panel</a>
+    <p>You have staff permissions!</p>
+{% endif %}

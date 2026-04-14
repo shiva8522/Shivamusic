@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Sign Up</h2>
+
+<form method="post" novalidate>
+    {% csrf_token %}
+
+    {% for field in form %}
+        <div style="margin-bottom: 10px;">
+            <label>{{ field.label_tag }}</label>
+            {{ field }}
+            {% if field.errors %}
+                <div style="color: red;">
+                    {{ field.errors|striptags }}
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+    <button type="submit">Register</button>
+
+    {% if form.non_field_errors %}
+        <div style="color: red; margin-top: 10px;">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+</form>
+{% endblock %}

@@ -1,0 +1,194 @@
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Music App</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'music/styles/style.css' %}">
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <p>Your Music, Your Vibe !</p>
+        <!-- Navigation Bar -->
+        <nav>
+            <div class="logo"></div>
+            
+            <!-- Mobile menu button for toggling side menu -->
+            <button id="menu-toggle" class="menu-btn logo">☰</button>
+            
+            <!-- Side Menu -->
+            <div id="side-menu" class="side-menu">
+                <span class="logo_color">ShivaMusic</span>
+                
+                <!-- Button to close the menu -->
+                <button id="close-menu" class="close-btn">&times;</button>
+                
+                <!-- Navigation Links -->
+                <ul>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'song_list' %}">Songs</a></li>
+                    
+                    {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                        <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    
+                    {% if user.is_authenticated %}
+                    <li>Welcome, {{ user.username }}</li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                    {% else %}
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'register' %}">Sign Up</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home-refresh">
+        <h1>Welcome to ShivaMusic</h1>
+        <p>Your favorite music, anytime, anywhere.</p>
+        <!-- Button to navigate to the Playlists section -->
+        <button onclick="window.location.href='#playlist-section'">Explore Playlists</button>
+    </section>
+    
+    <section class="blog-section">
+        <h2>ShivaMusic Blog</h2>
+        <p><a href="{% url 'blog_home' %}">Go to Blog</a></p>
+        {% if user.is_authenticated %}
+            <p><a href="{% url 'create_post' %}">Write a New Post</a></p>
+            <p><a href="{% url 'private_notes' %}">My Private Notes</a></p>
+        {% else %}
+            <p><a href="{% url 'login' %}">Login to write blogs & notes</a></p>
+        {% endif %}
+    </section>
+    
+
+<!-- Playlist Section -->
+<section class="playlist" id="playlist-section">
+    <h2>Featured Playlists</h2>
+    <div class="playlist-container">
+        <div class="playlist-item">
+            <img src="{% static 'music/images/playlist1.png' %}" alt="Top Hits 2024">
+            <p>Top Hits 2024</p>
+        </div>
+        <div class="playlist-item">
+            <img src="{% static 'music/images/playlist2.png' %}" alt="Chill Vibes">
+            <p>Chill Vibes</p>
+        </div>
+        <div class="playlist-item">
+            <img src="{% static 'music/images/playlist3.png' %}" alt="Workout Mix">
+            <p>Workout Mix</p>
+        </div>
+        <div class="playlist-item">
+            <img src="{% static 'music/images/playlist4.png' %}" alt="Relaxing Beats">
+            <p>Relaxing Beats</p>
+        </div>
+        <div class="playlist-item">
+            <img src="{% static 'music/images/playlist5.png' %}" alt="Bhakti">
+            <p>Bhakti</p>
+        </div>
+    </div>
+</section>
+
+
+    <!-- It has list of playlist data. -->
+    <section class="music-player" id="music-player">
+        <h2>Now Playing</h2>
+        <audio controls>
+            <source src="{% static 'music\songs\song1.mp3' %}" type="audio/mpeg">
+        </audio>
+        <audio controls>
+            <source src="{% static 'music\songs\song2.mp3' %}" type="audio/mpeg">
+        </audio>
+        <audio controls>
+            <source src="{% static 'music\songs\song3.mp3' %}" type="audio/mpeg">
+        </audio>
+        <audio controls>
+            <source src="{% static 'music\songs\song4.mp3' %}" type="audio/mpeg">
+        </audio>
+        <audio controls>
+            <source src="{% static 'music\songs\song5.mp3' %}" type="audio/mpeg">
+        </audio>
+    </section>
+
+    <!-- This form handles the user's registration data. -->
+    <section class="form-container">
+        <h2>User Registration</h2>
+        <form id="registrationForm">
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+            <span id="nameError" class="error"></span>
+    
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            <span id="emailError" class="error"></span>
+    
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="Choose a strong password" required>
+            <span id="passwordError" class="error"></span>
+    
+            <label for="gender">Gender:</label>
+            <select id="gender" name="gender">
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
+    
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" name="dob" required>
+    
+            <label for="terms">
+                <input type="checkbox" id="terms" name="terms" required> I agree to the terms and conditions
+            </label>
+    
+            <button type="submit">Register</button>
+        </form>
+    
+        <!-- This form handles the music upload section. -->
+        <h2>Upload Your Music</h2>
+        <form id="uploadForm">
+            <label for="title">Song Title:</label>
+            <input type="text" id="title" name="title" required>
+    
+            <label for="artist">Artist Name:</label>
+            <input type="text" id="artist" name="artist" required>
+    
+            <label for="genre">Genre:</label>
+            <select id="genre" name="genre">
+                <option value="">Select Genre</option>
+                <option value="pop">Pop</option>
+                <option value="rock">Rock</option>
+                <option value="jazz">Jazz</option>
+                <option value="hip-hop">Hip-Hop</option>
+            </select>
+    
+            <label for="musicFile">Upload Music File: (File size should not exceed 5MB)</label>
+            <input type="file" id="musicFile" name="musicFile" accept=".mp3, .wav" required >
+    
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" placeholder="Describe your track"></textarea>
+    
+            <button type="submit">Upload</button>
+        </form>
+    </section>
+    
+    <section id="tableContainer"> 
+    </section>
+
+    <footer>
+        <p>Enjoy your journey through sound</p>
+            <p>&copy; 2025 ShivaMusic. All rights reserved.</p>
+    </footer>
+
+    <script src="{% static 'music/scripts/script.js' %}"></script>
+
+</body>
+</html>

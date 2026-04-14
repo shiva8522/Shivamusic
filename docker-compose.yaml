@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    command: ["gunicorn", "--bind", "0.0.0.0:8000", "mymusicapp.wsgi:application"]
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    env_file:
+      - .env
+    volumes:
+      - myapp-storage:/app/storage
+
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_DATABASE: myappdb
+      MYSQL_USER: myappdbuser
+      MYSQL_PASSWORD: myappdbpass
+      MYSQL_ROOT_PASSWORD: rootpassword
+    volumes:
+      - db-data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+
+volumes:
+  db-data:
+  myapp-storage:

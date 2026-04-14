@@ -1,0 +1,13 @@
+<h2>My Private Notes</h2>
+<ul>
+{% for note in notes %}
+    <li>{{ note.content }} ({{ note.created_at }})</li>
+{% endfor %}
+</ul>
+
+<h3>Add a New Note</h3>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+</form>
